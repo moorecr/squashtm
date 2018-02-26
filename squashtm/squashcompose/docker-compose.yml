@@ -1,0 +1,36 @@
+squash-tm-pg:
+  restart: always
+  environment:
+    POSTGRES_DB: squashtm
+    POSTGRES_PASSWORD: squashpg
+    POSTGRES_USER: squashtm
+  image: postgres
+  volumes:
+  - squash-tm-db:/var/lib/postgresql
+
+squash-tm:
+  restart: always
+  #environment:
+  #  REVERSE_PROXY_HOST: dv01-1-squashtest.syslab.net
+  #  REVERSE_PROXY_PORT: 80
+  #  REVERSE_PROXY_PROTOCOL: http
+  #LDAP_ENABLED: true
+  #LDAP_PROVIDER: ad-ldap
+  #LDAP_URL: ldap://dv01-dc1.syslab.net:389
+  #LDAP_SECURITY_MANAGERDN: atfldap@syslab.net
+  #LDAP_SECURITY_PASSWORD: go0r@ng3
+  #LDAP_FETCH_ATTRIBUTES: true
+  #LDAP_USER_SEARCHFILTER: (&(objectclass\=user)(userAccountControl\:1.2.840.113556.1.4.803\:\=512))
+  #LDAP_USER_SEARCHBASE: (sAMAccountName{0})
+  ports:
+  - 32760:8080/tcp
+  image: fjudith/squash-tm
+  links:
+  - squash-tm-pg:postgres
+  volumes:
+  - squash-tm-tmp:/usr/share/squash-tm/tmp
+  - squash-tm-bundles:/usr/share/squash-tm/bundles
+  - squash-tm-logs:/usr/share/squash-tm/logs
+  - squash-tm-jettyhome:/usr/share/squash-tm/jettyhome
+  - squash-tm-luceneindexes:/usr/share/squash-tm/luceneindexes
+  - squash-tm-plugins:/usr/share/squash-tm/plugins
